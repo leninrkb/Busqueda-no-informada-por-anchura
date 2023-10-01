@@ -1,29 +1,31 @@
 from queue import Queue
 from agente import Agente
 import manager as mn
+from graphviz import Digraph
 
 mapa = [
-    ['UTA',          'MALL', 'av eloy alfaro', 'wefsdf',        'calle ficoa'],
-    ['calle aaa',    'av jjj',      'av sss',         'calle aac',  'calle aba'],
-    ['calle bbb',    'av kkk',      'av ttt',         'calle aad',  'calle aca'],
-    ['calle ccc',    'av lll',      'av uuu',         'calle aae',  'calle ada'],
-    ['calle ddd',    'av mmm',      'av vvv',         'calle aaf',  'calle aea'],
-    ['calle eee',    'av nnn',      'av www',         'calle aag',  'calle afa'],
-    ['calle fff',    'wbdghf',      'gjfgsf',         'calle aah',  'calle aga'],
-    ['calle ggg',    'av ppp',      'av yyy',         'fgdg',  'calle aha'],
-    ['calle hhh',    'av qqq',      'dfgdf',         'calle aaj',  'calle ata'],
-    ['calle iii',    'av rrr',      'dgfgdg',         'calle aak',  'calle axa'],
+    ['', 'uta', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', 'mall', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
 ]
 
 
-puntoInicial = mn.obtenerUbicacion('UTA', mapa)
-puntoObjetivo = mn.obtenerUbicacion('MALL', mapa)
+puntoInicial = mn.obtenerUbicacion('uta', mapa)
+puntoObjetivo = mn.obtenerUbicacion('mall', mapa)
 print(f'UTA {puntoInicial}')
 print(f'MALL {puntoObjetivo}')
 
 raiz = Agente()
 raiz.inicio(mapa, puntoInicial, puntoObjetivo)
+raiz.controlarRepetidos = True #activo el control de los repetidos
 
+grafo = Digraph()
 cola = Queue()
 cola.put(raiz)
 
@@ -31,14 +33,19 @@ solucion:Agente = None
 print('buscando solucion ...')
 while not cola.empty():
     estadoActual:Agente = cola.get()
+    grafo.node(estadoActual.obtenerID(), estadoActual.obtenerID())
     if estadoActual.esObjetivo(): # control si es objetivo
         solucion = estadoActual
+        grafo.node(estadoActual.obtenerID(), estadoActual.obtenerID())
         print('solucion encontrada ...')
         break
     nuevosEstados = mn.ejecutarMovimientos(mn.generarHijos(estadoActual, 4))
     for nuevo in nuevosEstados:
+        grafo.node(nuevo.obtenerID(), nuevo.obtenerID())
+        grafo.edge(estadoActual.obtenerID(), nuevo.obtenerID())
         cola.put(nuevo)
         
 mapaVacio = mn.dibujarMapaVacio(len(mapa), len(mapa[0]))
 mn.dibujarRutaSolucion(solucion, mapaVacio)
 solucion.mostrarcaminoRecorrido()
+grafo.render("arbol_busqueda", view=True)
