@@ -1,8 +1,23 @@
 class Agente():
-    caminoRecorrido = []
-    def __init__(self, dimensionesMatriz:tuple, puntoInicial:tuple, puntoObjetivo:tuple):
-        self.alto = dimensionesMatriz[0]
-        self.ancho = dimensionesMatriz[1]
+    def __init__(self, agente=None):
+        if agente == None:
+            self.alto = 0 
+            self.ancho = 0
+            self.puntoInicial = (0,0) 
+            self.puntoObjetivo = (0,0)
+            self.puntoActual = (0,0)
+            self.caminoRecorrido = [] 
+        else:
+            self.alto = agente.alto
+            self.ancho = agente.ancho
+            self.puntoInicial = agente.puntoInicial
+            self.puntoObjetivo = agente.puntoObjetivo
+            self.puntoActual = agente.puntoActual
+            self.caminoRecorrido = agente.caminoRecorrido
+        
+    def inicio(self, matriz:list[list[str]], puntoInicial:tuple, puntoObjetivo:tuple):
+        self.alto = len(matriz)
+        self.ancho = len(matriz[0])
         self.puntoInicial = puntoInicial
         self.puntoObjetivo = puntoObjetivo
         self.puntoActual = self.puntoInicial

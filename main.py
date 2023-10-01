@@ -1,4 +1,6 @@
 from queue import Queue
+from agente import Agente
+import manager as mn
 
 mapa = [
     ['calle flores', 'av miradero', 'av eloy alfaro', 'UTA 0,3',        'calle ficoa'],
@@ -13,7 +15,13 @@ mapa = [
     ['calle iii',    'av rrr',      'av aab',         'calle aak',  'calle axa'],
 ]
 
+
+puntoInicial = mn.obtenerUbicacion('UTA 0,3', mapa)
+puntoObjetivo = mn.obtenerUbicacion('MALL 8,2', mapa)
+agente = Agente()
+agente.inicio(mapa, puntoInicial, puntoObjetivo)
+print(agente.movAbajo())
 queue = Queue()
 
 while not queue.empty():
-    pass
+    break
